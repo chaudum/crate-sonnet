@@ -92,6 +92,7 @@ crate {
     enable_blobs: false,
     enable_rolling_upgrades: false,
     enable_master_data_deployment: false,
+    enable_jmx_api: false,
   },
 }
 ```
