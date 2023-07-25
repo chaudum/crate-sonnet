@@ -9,9 +9,16 @@ local k = import 'ksonnet-util/kausal.libsonnet';
   local envVar = k.core.v1.envVar,
 
   newCrateContainer(args, cpu, mem, heap, dataVolumeMounts=[], containerName='crate')::
+    local flags =
+      k.util.mapToFlags($.common_args + args, prefix='-C') +
+      if $._config.enable_jmx_api then
+        k.util.mapToFlags($.jmx_args, prefix='-D')
+      else
+        [];
+
     container.new(containerName, $._images.crate) +
     container.withPorts($.util.defaultPorts + $.util.extraPorts) +
-    container.withArgsMixin(k.util.mapToFlags($.common_args + args, prefix='-C')) +
+    container.withArgsMixin(flags) +
     container.withVolumeMountsMixin(dataVolumeMounts) +
     container.withEnvMixin([
       envVar.new('CRATE_HEAP_SIZE', heap),
@@ -44,6 +51,15 @@ local k = import 'ksonnet-util/kausal.libsonnet';
 
   crate_ext_volume_mount::
     [volumeMount.new('ext', '/crate/ext')],
+
+  jmx_args:: {
+    'com.sun.management.jmxremote': '',
+    'com.sun.management.jmxremote.port': $._config.jmx_listen_port,
+    'com.sun.management.jmxremote.ssl': false,
+    'com.sun.management.jmxremote.authenticate': false,
+    'com.sun.management.jmxremote.rmi.port': $._config.jmx_listen_port,
+    'java.rmi.server.hostname': '${POD_NAME}',
+  },
 
   common_args:: {
     'path.conf': $._config.config_mount_path,

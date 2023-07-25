@@ -12,9 +12,11 @@ local k = import 'ksonnet-util/kausal.libsonnet';
     ],
 
     extraPorts:: [
-      containerPort.new(name='jmx', port=$._config.jmx_listen_port),
       containerPort.new(name='jmx-exporter', port=$._config.jmx_exporter_listen_port),
-    ],
+    ] + if $._config.enable_jmx_api then
+      [containerPort.new(name='jmx', port=$._config.jmx_listen_port)]
+    else
+      [],
 
     readinessProbe::
       container.mixin.readinessProbe.httpGet.withPath('/ready') +
