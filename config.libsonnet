@@ -234,7 +234,7 @@ local deployment = k.apps.v1.deployment;
   },
 
   config_file:
-    configMap.new('crate') +
+    configMap.new($._config.config_mount_name) +
     configMap.withData({
       'crate.yml': k.util.manifestYaml($._config.crate),
       // 'log4j2.properties': $.util.toProperties($._config.log4j),
