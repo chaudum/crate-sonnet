@@ -4,7 +4,15 @@ A [jsonnet](https://jsonnet.org/) mixin library to create [CrateDB](https://crat
 
 ---
 
-## Usage
+## ⚠️ Warning
+
+**This library is not meant for production usage yet!**
+
+The APIs are still subject to change.
+
+---
+
+## 🏗️ Usage
 
 This library is intended to be used with [Tanka](https://tanka.dev) to deploy Kubernetes manifests.
 
@@ -35,7 +43,7 @@ crate {
 }
 ```
 
-## Default configuration
+## ⚙️ Default configuration
 
 ```jsonnet
 {
