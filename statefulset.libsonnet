@@ -46,7 +46,7 @@ local k = import 'ksonnet-util/kausal.libsonnet';
     [volumeMount.new('ext', '/crate/ext')],
 
   common_args:: {
-    'path.conf': '/crate/config',
+    'path.conf': $._config.config_mount_path,
     'node.name': '${POD_NAME}',
     'node.attr.namespace': '${POD_NAMESPACE}',
   },
