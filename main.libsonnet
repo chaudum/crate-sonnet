@@ -10,4 +10,5 @@
 + (import 'images.libsonnet')
 + (import 'common.libsonnet')
 + (import 'pvc.libsonnet')
++ (import 'sqlexporter.libsonnet')
 + (import 'statefulset.libsonnet')

@@ -36,7 +36,8 @@ local k = import 'ksonnet-util/kausal.libsonnet';
 
   newCrateStatefulSet(container, name='node', replicas=3, pvcs=[], prefix='crate')::
     local fqn = '%s-%s' % [prefix, name];
-    statefulSet.new(fqn, replicas, [container], pvcs) +
+    local containers = [container] + if $._config.enable_sql_exporter then [$.sql_exporter_container] else [];
+    statefulSet.new(fqn, replicas, containers, pvcs) +
     statefulSet.mixin.spec.withServiceName(fqn) +
     statefulSet.mixin.spec.withPodManagementPolicy('Parallel') +
     statefulSet.mixin.spec.updateStrategy.withType(if $._config.enable_rolling_upgrades then 'RollingUpdate' else 'OnDelete') +
@@ -47,7 +48,10 @@ local k = import 'ksonnet-util/kausal.libsonnet';
     k.util.emptyVolumeMount('ext', '/crate/ext') +
     k.util.antiAffinity +
     $.config_hash_mixin +
-    {},
+    if $._config.enable_sql_exporter then
+      k.util.configVolumeMount('sql-exporter', '/sql-exporter/config')
+    else
+      {},
 
   crate_ext_volume_mount::
     [volumeMount.new('ext', '/crate/ext')],
