@@ -46,12 +46,14 @@ local deployment = k.apps.v1.deployment;
     psql_listen_port: 5432,
     jmx_listen_port: 7979,
     jmx_exporter_listen_port: 8080,
+    sql_exporter_listen_port: 8181,
 
     // flags
     enable_blobs: false,
     enable_rolling_upgrades: false,
     enable_master_data_deployment: false,
     enable_jmx_api: false,
+    enable_sql_exporter: true,
 
     // crate.yml
     crate: {
